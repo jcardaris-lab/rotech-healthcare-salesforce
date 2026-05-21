@@ -353,11 +353,10 @@
   <div class="container">
     <div class="welcome-inner">
       <div class="welcome-video-wrap reveal">
-        <div id="welcome-video-container" class="welcome-video-placeholder">
-          <div class="play-btn" id="playBtn">
-            <svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          </div>
-          <p style="color:#94A3B8;font-size:13px;margin:0;">Video loading…</p>
+        <div id="welcome-video-container">
+          <video controls preload="metadata" style="width:100%;border-radius:10px;display:block;">
+            <source src="https://files2.heygen.ai/aws_pacific/avatar_tmp/81ea3638f2e74c97bde40edd5737cbca/e220a17da84e49bd9525c2dfb1071550.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
       <div class="welcome-text reveal reveal-delay-2">
@@ -966,31 +965,8 @@
   }, { threshold: 0.3 });
   counterObserver.observe(document.getElementById('hero'));
 
-  // ── HEYGEN VIDEO INJECT ───────────────────────────────────────
-  const VIDEO_ID = 'e220a17da84e49bd9525c2dfb1071550';
-  async function pollVideo() {
-    try {
-      const res = await fetch(
-        `https://api.heygen.com/v1/video_status.get?video_id=${VIDEO_ID}`,
-        { headers: { 'X-Api-Key': 'sk_V2_hgu_kB87tAsNV9c_Bm5sEeV6rAxc0d9LpkEGWvoWln674FEl' } }
-      );
-      const data = await res.json();
-      const v = data.data || {};
-      if (v.status === 'completed' && v.video_url) {
-        const container = document.getElementById('welcome-video-container');
-        if (container) {
-          container.innerHTML = `
-            <video controls preload="metadata" style="width:100%;border-radius:10px;display:block;">
-              <source src="${v.video_url}" type="video/mp4" />
-            </video>`;
-        }
-      } else if (v.status === 'processing' || v.status === 'pending') {
-        setTimeout(pollVideo, 15000);
-      }
-    } catch(e) { /* silent fail */ }
-  }
-  // Start polling after 30s initial delay (video takes time to render)
-  setTimeout(pollVideo, 30000);
+  // HeyGen video is already embedded directly — no polling needed
+  // Video ID: e220a17da84e49bd9525c2dfb1071550 (completed)
 
   // ── ROI CALCULATOR (static display, interactive inputs) ───────
   // Inputs are pre-filled; results show Forrester static numbers
